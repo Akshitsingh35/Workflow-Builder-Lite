@@ -1,10 +1,10 @@
-const { AppError } = require('./errorHandler');
-const { STEP_REGISTRY } = require('../services/stepRegistry');
+import { AppError } from './errorHandler.js';
+import { STEP_REGISTRY } from '../services/stepRegistry.js';
 
 /**
  * Validate workflow creation payload
  */
-const validateWorkflow = (data) => {
+export const validateWorkflow = (data) => {
     const errors = [];
 
     // Check name
@@ -45,7 +45,7 @@ const validateWorkflow = (data) => {
 /**
  * Validate run workflow payload
  */
-const validateRunInput = (data) => {
+export const validateRunInput = (data) => {
     const errors = [];
 
     if (!data.workflowId || typeof data.workflowId !== 'string') {
@@ -66,7 +66,3 @@ const validateRunInput = (data) => {
     };
 };
 
-module.exports = {
-    validateWorkflow,
-    validateRunInput
-};

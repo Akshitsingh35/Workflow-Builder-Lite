@@ -1,7 +1,7 @@
 /**
  * Custom application error class
  */
-class AppError extends Error {
+export class AppError extends Error {
     constructor(message, statusCode = 500) {
         super(message);
         this.statusCode = statusCode;
@@ -10,10 +10,7 @@ class AppError extends Error {
     }
 }
 
-/**
- * Express error handling middleware
- */
-const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, next) => {
     console.error('Error:', err.message);
 
     if (err.isOperational) {
@@ -45,15 +42,6 @@ const errorHandler = (err, req, res, next) => {
     });
 };
 
-/**
- * Async handler wrapper to catch errors in async route handlers
- */
-const asyncHandler = (fn) => (req, res, next) => {
+export const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
-};
-
-module.exports = {
-    AppError,
-    errorHandler,
-    asyncHandler
 };

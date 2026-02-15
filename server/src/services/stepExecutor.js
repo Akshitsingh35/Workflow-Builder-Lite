@@ -1,6 +1,6 @@
-const { STEP_REGISTRY } = require('./stepRegistry');
-const llmService = require('./llmService');
-const { AppError } = require('../utils/errorHandler');
+import { STEP_REGISTRY } from './stepRegistry.js';
+import llmService from './llmService.js';
+import { AppError } from '../utils/errorHandler.js';
 
 /**
  * Step Executor - Executes individual workflow steps
@@ -41,4 +41,4 @@ class StepExecutor {
     }
 }
 
-module.exports = new StepExecutor();
+export default new StepExecutor();

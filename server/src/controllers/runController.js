@@ -1,7 +1,7 @@
-const prisma = require('../services/database');
-const workflowEngine = require('../services/workflowEngine');
-const { validateRunInput } = require('../utils/validators');
-const { AppError } = require('../utils/errorHandler');
+import prisma from '../services/database.js';
+import workflowEngine from '../services/workflowEngine.js';
+import { validateRunInput } from '../utils/validators.js';
+import { AppError } from '../utils/errorHandler.js';
 
 /**
  * Run Controller - Handles workflow execution and run history
@@ -14,39 +14,18 @@ class RunController {
     async runWorkflow(req, res, next) {
         try {
             const validatedData = validateRunInput(req.body);
+            const workflow = await prisma.workflow.findUnique({ where: { id: validatedData.workflowId } });
+            if (!workflow) return next(new AppError('Workflow not found', 404));
 
-            // Fetch the workflow
-            const workflow = await prisma.workflow.findUnique({
-                where: { id: validatedData.workflowId }
-            });
-
-            if (!workflow) {
-                throw new AppError('Workflow not found', 404);
-            }
-
-            // Execute the workflow
-            const stepOutputs = await workflowEngine.executeWorkflow(
-                workflow.steps,
-                validatedData.inputText
-            );
-
-            // Save the run
+            const stepOutputs = await workflowEngine.executeWorkflow(workflow.steps, validatedData.inputText);
             const run = await prisma.run.create({
                 data: {
                     workflowId: workflow.id,
                     inputText: validatedData.inputText,
-                    stepOutputs: stepOutputs
+                    stepOutputs
                 },
-                include: {
-                    workflow: {
-                        select: {
-                            name: true
-                        }
-                    }
-                }
+                include: { workflow: { select: { name: true } } }
             });
-
-            const totalExecutionTime = workflowEngine.getTotalExecutionTime(stepOutputs);
 
             res.status(201).json({
                 success: true,
@@ -55,7 +34,7 @@ class RunController {
                     workflowName: run.workflow.name,
                     inputText: run.inputText,
                     stepOutputs: run.stepOutputs,
-                    totalExecutionTimeMs: totalExecutionTime,
+                    totalExecutionTimeMs: stepOutputs.reduce((sum, s) => sum + (s.executionTimeMs || 0), 0),
                     createdAt: run.createdAt
                 }
             });
@@ -148,4 +127,4 @@ class RunController {
     }
 }
 
-module.exports = new RunController();
+export default new RunController();

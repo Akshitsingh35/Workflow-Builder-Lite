@@ -1,20 +1,22 @@
-const express = require('express');
+import express from 'express';
+import workflowController from '../controllers/workflowController.js';
+import { asyncHandler } from '../utils/errorHandler.js';
+
 const router = express.Router();
-const workflowController = require('../controllers/workflowController');
 
 // Get available step types (must be before :id route)
-router.get('/steps', (req, res, next) => workflowController.getAvailableSteps(req, res, next));
+router.get('/steps', asyncHandler(workflowController.getAvailableSteps));
 
 // Create a new workflow
-router.post('/', (req, res, next) => workflowController.createWorkflow(req, res, next));
+router.post('/', asyncHandler(workflowController.createWorkflow));
 
 // Get all workflows
-router.get('/', (req, res, next) => workflowController.getWorkflows(req, res, next));
+router.get('/', asyncHandler(workflowController.getWorkflows));
 
 // Get a single workflow
-router.get('/:id', (req, res, next) => workflowController.getWorkflowById(req, res, next));
+router.get('/:id', asyncHandler(workflowController.getWorkflowById));
 
 // Delete a workflow
-router.delete('/:id', (req, res, next) => workflowController.deleteWorkflow(req, res, next));
+router.delete('/:id', asyncHandler(workflowController.deleteWorkflow));
 
-module.exports = router;
+export default router;

@@ -1,14 +1,16 @@
-const express = require('express');
+import express from 'express';
+import runController from '../controllers/runController.js';
+import { asyncHandler } from '../utils/errorHandler.js';
+
 const router = express.Router();
-const runController = require('../controllers/runController');
 
-// Execute a workflow (POST /api/run)
-router.post('/', (req, res, next) => runController.runWorkflow(req, res, next));
+// POST /api/runs - Execute a workflow
+router.post('/', asyncHandler(runController.runWorkflow));
 
-// Get run history (GET /api/runs?limit=5)
-router.get('/', (req, res, next) => runController.getRuns(req, res, next));
+// GET /api/runs - List all runs
+router.get('/', asyncHandler(runController.getRuns));
 
-// Get a single run (GET /api/runs/:id)
-router.get('/:id', (req, res, next) => runController.getRunById(req, res, next));
+// GET /api/runs/:id - Get a single run
+router.get('/:id', asyncHandler(runController.getRunById));
 
-module.exports = router;
+export default router;

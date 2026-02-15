@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 
 /**
  * Prisma client singleton instance
@@ -13,4 +13,4 @@ process.on('beforeExit', async () => {
     await prisma.$disconnect();
 });
 
-module.exports = prisma;
+export default prisma;

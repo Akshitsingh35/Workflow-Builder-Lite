@@ -68,14 +68,18 @@ function History() {
                         <div key={run.id} className="history-item">
                             <div
                                 className="history-item-header"
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => toggleExpand(run.id)}
+                                style={{ display: 'flex', alignItems: 'center' }}
                             >
                                 <span className="history-item-workflow">
                                     {run.workflowName}
                                 </span>
-                                <span className="history-item-date">
+                                <span className="history-item-date" style={{ marginLeft: '1rem' }}>
                                     {formatDate(run.createdAt)}
+                                </span>
+                                <span style={{ marginLeft: 'auto', color: 'var(--primary-color)', cursor: 'pointer' }}
+                                    onClick={() => toggleExpand(run.id)}
+                                >
+                                    {expandedRun === run.id ? '▲ Hide details' : '▼ Show details'}
                                 </span>
                             </div>
 
@@ -90,9 +94,6 @@ function History() {
                                 <span>•</span>
                                 <span>
                                     {run.totalExecutionTimeMs}ms total
-                                </span>
-                                <span style={{ marginLeft: 'auto', color: 'var(--primary-color)' }}>
-                                    {expandedRun === run.id ? '▲ Hide details' : '▼ Show details'}
                                 </span>
                             </div>
 

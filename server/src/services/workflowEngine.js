@@ -1,4 +1,4 @@
-const stepExecutor = require('./stepExecutor');
+import stepExecutor from './stepExecutor.js';
 
 /**
  * Workflow Engine - Orchestrates workflow execution
@@ -48,4 +48,4 @@ class WorkflowEngine {
     }
 }
 
-module.exports = new WorkflowEngine();
+export default new WorkflowEngine();

@@ -1,3 +1,6 @@
+/**
+ * API Service - Centralized API calls (using axios)
+ */
 
 /**
  * API Service - Centralized API calls (using axios)
@@ -5,7 +8,8 @@
 
 import axios from 'axios';
 
-const API_BASE = '/api';
+// Use VITE_API_URL from environment, fallback to /api for dev proxy
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Handle API response (axios version)
@@ -68,7 +72,7 @@ export const runApi = {
      * Execute a workflow
      */
     async execute(workflowId, inputText) {
-        const response = await axios.post(`${API_BASE}/run`, { workflowId, inputText });
+        const response = await axios.post(`${API_BASE}/runs`, { workflowId, inputText });
         return handleResponse(response);
     },
 

@@ -1,7 +1,7 @@
-const prisma = require('../services/database');
-const { validateWorkflow } = require('../utils/validators');
-const { getAvailableSteps } = require('../services/stepRegistry');
-const { AppError } = require('../utils/errorHandler');
+import prisma from '../services/database.js';
+import { validateWorkflow } from '../utils/validators.js';
+import { getAvailableSteps } from '../services/stepRegistry.js';
+import { AppError } from '../utils/errorHandler.js';
 
 /**
  * Workflow Controller - Handles workflow CRUD operations
@@ -127,4 +127,4 @@ class WorkflowController {
     }
 }
 
-module.exports = new WorkflowController();
+export default new WorkflowController();

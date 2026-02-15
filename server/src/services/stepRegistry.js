@@ -7,7 +7,7 @@
  * - process: function - for non-LLM steps, the processing logic
  */
 
-const STEP_REGISTRY = {
+export const STEP_REGISTRY = {
     /**
      * Clean step - removes extra whitespace, normalizes text
      * Non-LLM step
@@ -103,15 +103,15 @@ Title:`
 /**
  * Get all available step types
  */
-const getAvailableSteps = () => {
+export function getAvailableSteps() {
     return Object.entries(STEP_REGISTRY).map(([type, config]) => ({
         type,
         description: config.description,
         usesLLM: config.usesLLM
     }));
-};
+}
 
-module.exports = {
-    STEP_REGISTRY,
-    getAvailableSteps
-};
+// module.exports = {
+//     STEP_REGISTRY,
+//     getAvailableSteps
+// };

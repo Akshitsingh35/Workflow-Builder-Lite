@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import healthController from '../controllers/healthController.js';
+
 const router = express.Router();
-const healthController = require('../controllers/healthController');
 
 // Full health check
 router.get('/', (req, res, next) => healthController.getHealth(req, res, next));
@@ -8,4 +9,4 @@ router.get('/', (req, res, next) => healthController.getHealth(req, res, next));
 // Simple liveness check
 router.get('/live', (req, res) => healthController.getLiveness(req, res));
 
-module.exports = router;
+export default router;

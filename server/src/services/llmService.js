@@ -1,5 +1,5 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const { AppError } = require('../utils/errorHandler');
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { AppError } from '../utils/errorHandler.js';
 
 /**
  * LLM Service - Handles all Google Gemini API interactions
@@ -92,4 +92,4 @@ class LLMService {
 }
 
 // Export singleton instance
-module.exports = new LLMService();
+export default new LLMService();

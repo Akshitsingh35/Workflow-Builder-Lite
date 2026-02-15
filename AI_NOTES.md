@@ -1,60 +1,135 @@
-# AI Notes
+How I Used AI During This Project
 
-This document explains how AI tools were used in the development of Workflow Builder Lite.
+I used AI tools to speed up development, but not to make architectural decisions for me.
 
-## AI Tools Used
+Before writing code, I designed the overall system flow myself — including how workflows are stored, how steps are executed sequentially, how LLM calls are isolated, and how errors propagate through the system.
 
-### Development Assistance
+AI helped with implementation efficiency, but I made sure I understood and verified every part of the codebase.
 
-- **GitHub Copilot (Claude)**: Used for generating boilerplate code, implementing patterns, and creating documentation
+AI Tools Used
+GitHub Copilot (Claude)
 
-### LLM Provider for the Application
+Used mainly for:
 
-- **Google Gemini (gemini-2.5-flash)**: Selected as the LLM provider for workflow step execution
+Generating boilerplate Express routes
 
-## Why Google Gemini?
+Writing repetitive CRUD logic
 
-Several factors influenced the choice of Gemini:
+Suggesting small refactors
 
-1. **Free Tier**: Gemini offers a generous free tier, making it accessible for learning, prototyping, and small-scale production use without any cost
+Improving documentation clarity
 
-2. **Speed**: Gemini 1.5 Flash is optimized for low latency, which is important for a responsive user experience when executing multi-step workflows
+Every AI-generated snippet was:
 
-3. **Quality**: For text processing tasks like summarization, key point extraction, and sentiment analysis, Gemini provides high-quality results comparable to other leading models
+Reviewed
 
-4. **Easy Setup**: Get a free API key instantly at https://aistudio.google.com/app/apikey - no credit card required
+Tested manually
 
-5. **Ecosystem**: The official Google Generative AI SDK (`@google/generative-ai` package) provides a clean, well-documented interface
+Adjusted to match my architecture
 
-## Manually Verified
+Refactored when necessary
 
-The following aspects were manually reviewed and verified:
+I did not copy large blocks blindly. I made sure I understood what each part of the code was doing.
 
-- [x] API endpoint functionality
-- [x] Database schema correctness
-- [x] Workflow execution flow
-- [x] Error handling paths
-- [x] Input validation rules
-- [x] Frontend routing and state management
-- [x] LLM prompt templates effectiveness
-- [x] Health check accuracy
+LLM Provider Used in the App
+Google Gemini (gemini-2.5-flash)
 
-## Code Quality Considerations
+Gemini is used inside the application to execute workflow steps like:
 
-- Clean separation of concerns (controllers, services, routes)
-- Modular step registry design (easy to add new step types)
-- Proper async/await usage throughout
-- Comprehensive error handling
-- No hardcoded secrets or sensitive data
-- Environment variable based configuration
+Summarization
 
-## Future AI Enhancements
+Key point extraction
 
-Potential improvements that could be added:
+Sentiment analysis
 
-- Support for multiple LLM providers (OpenAI, Anthropic, etc.)
-- Model selection per step
-- Prompt customization by users
-- Token usage tracking and cost estimation
-- Response caching for identical inputs
-- Streaming responses for long outputs
+Tag generation
+
+Title generation
+
+Why I Chose Gemini
+
+The choice was intentional:
+
+It has a generous free tier (important for hosted demo projects).
+
+The Flash model is fast, which keeps multi-step workflows responsive.
+
+It provides solid quality for text-processing tasks.
+
+The official SDK integrates cleanly into Node.js.
+
+I also designed the system so that the LLM provider can be replaced easily in the future.
+
+What I Designed Manually
+
+The following were designed and verified by me:
+
+The step registry pattern (each step defines its behavior and LLM usage)
+
+Sequential workflow execution logic
+
+Passing output of one step into the next
+
+Centralized error handling with operational vs unknown errors
+
+Validation rules (2–4 steps required, valid step types only)
+
+Health check endpoint (database + LLM connectivity)
+
+Separation of controllers, services, and routes
+
+Prisma schema relationships
+
+I tested all endpoints manually using Postman and through the frontend.
+
+Prompt Design
+
+Each LLM-based step defines its own prompt template inside the Step Registry.
+
+This gives:
+
+Clear responsibility per step
+
+Predictable outputs
+
+Easy extensibility
+
+Controlled LLM behavior
+
+I tested prompts with multiple input variations to ensure consistent output quality.
+
+Code Quality Decisions
+
+No API keys are hardcoded.
+
+All configuration is environment-based.
+
+Async route handlers are wrapped to avoid unhandled promise rejections.
+
+Validation happens before database or LLM execution.
+
+Controllers are kept thin and delegate logic to services.
+
+Future Improvements (If Extended Further)
+
+If this were extended into a production system, I would add:
+
+Support for multiple LLM providers
+
+Model selection per workflow step
+
+Streaming responses
+
+Token usage tracking
+
+Response caching
+
+User-defined custom step prompts
+
+Final Note
+
+AI helped me move faster while building this project, but I made sure to fully understand and verify the system’s architecture, execution flow, and integration details.
+
+My approach to AI-assisted development is simple:
+
+Use AI to accelerate — but always stay in control of the design.

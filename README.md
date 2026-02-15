@@ -1,59 +1,79 @@
+
 # Workflow Builder Lite
 
-A production-ready full-stack automation engine where users can create, run, and manage text processing workflows using AI.
+A modular, production-aware full-stack automation engine for creating, running, and managing text-processing workflows powered by AI.
+
+## Design Philosophy
+
+Workflow Builder Lite is designed for clarity, modularity, and maintainability. The system separates concerns across backend, frontend, and LLM integration, enabling straightforward extension and robust error handling. All AI/LLM interactions are isolated in dedicated service layers, ensuring that business logic and infrastructure remain decoupled from vendor-specific APIs.
 
 ## Architecture Overview
 
 ```
 workflow-builder/
 ├── server/                 # Backend (Node.js + Express)
-│   ├── prisma/
-│   │   └── schema.prisma   # Database schema
+│   ├── prisma/             # Database schema (PostgreSQL)
 │   └── src/
-│       ├── app.js          # Express application entry point
+│       ├── app.js
 │       ├── controllers/    # Request handlers
 │       ├── routes/         # API route definitions
-│       ├── services/       # Business logic
-│       └── utils/          # Utility functions
-│
+│       ├── services/       # Business logic & LLM isolation
+│       └── utils/          # Validation & error handling
 ├── client/                 # Frontend (React + Vite)
 │   ├── src/
-│   │   ├── pages/          # Page components
-│   │   ├── components/     # Reusable components
-│   │   └── services/       # API client
+│   │   ├── pages/
+│   │   ├── components/
+│   │   └── services/
 │   └── index.html
-│
 └── docs/                   # Documentation
 ```
 
 ### Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Backend | Node.js + Express |
-| Database | PostgreSQL |
-| ORM | Prisma |
-| Frontend | React (Vite) |
-| LLM Provider | Google Gemini (Free Tier) |
+| Layer     | Technology         |
+|-----------|--------------------|
+| Backend   | Node.js, Express   |
+| Database  | PostgreSQL         |
+| ORM       | Prisma             |
+| Frontend  | React (Vite)       |
+| LLM       | Google Gemini API  |
 
-## Features
+---
 
-- **Create Workflows**: Build workflows with 2-4 sequential processing steps
-- **Run Workflows**: Execute workflows on input text with live progress
-- **View Results**: See output of each step with execution times
-- **Run History**: View last 5 workflow runs
-- **Health Status**: Monitor server, database, and LLM connectivity
+## Design Highlights
+
+- **Modular Routing & Controllers:** All API endpoints are organized for clarity and maintainability.
+- **LLM Isolation:** All calls to external LLMs are handled in a dedicated service, making it easy to swap providers or mock for testing.
+- **Validation & Error Handling:** Centralized input validation and error middleware ensure robust, predictable behavior.
+- **Scalable Data Model:** Uses PostgreSQL with Prisma ORM for reliable, scalable persistence.
+
+---
+
+## Workflow Execution Model
+
+Workflows consist of 2–4 sequential steps. Each step processes the output of the previous one, supporting both non-LLM and LLM-based operations. The engine executes steps strictly in order, tracking execution time and returning structured results for each stage.
 
 ### Available Step Types
 
-| Step Type | Description | Uses LLM |
-|-----------|-------------|----------|
-| `clean` | Remove extra whitespace, normalize text | No |
-| `summarize` | Generate a concise summary | Yes |
-| `extract_keypoints` | Extract key points as bullet list | Yes |
-| `tag_category` | Assign category tags | Yes |
-| `sentiment` | Analyze sentiment and tone | Yes |
-| `generate_title` | Generate a descriptive title | Yes |
+| Step Type         | Description                        | Uses LLM |
+|-------------------|------------------------------------|----------|
+| `clean`           | Remove extra whitespace, normalize | No       |
+| `summarize`       | Generate a concise summary         | Yes      |
+| `extract_keypoints` | Extract key points as bullet list | Yes      |
+| `tag_category`    | Assign category tags               | Yes      |
+| `sentiment`       | Analyze sentiment and tone         | Yes      |
+| `generate_title`  | Generate a descriptive title       | Yes      |
+
+---
+
+## Scalability Considerations
+
+- **Stateless API:** The backend is stateless and horizontally scalable; all state is persisted in PostgreSQL.
+- **LLM Service Isolation:** LLM calls are abstracted, allowing for batching, retries, or provider changes without affecting core logic.
+- **Database:** Uses Prisma for efficient queries and schema migrations. Designed to support cloud or on-prem PostgreSQL.
+- **Frontend:** Built with React and Vite for fast, modular UI development and easy static hosting.
+
+---
 
 ## Setup Instructions
 
@@ -62,6 +82,7 @@ workflow-builder/
 - Node.js 18+ 
 - PostgreSQL database (local or cloud like Neon)
 - Google Gemini API key (free at https://aistudio.google.com/app/apikey)
+
 
 ### 1. Clone and Install Dependencies
 
@@ -74,6 +95,7 @@ npm install
 cd ../client
 npm install
 ```
+
 
 ### 2. Configure Environment Variables
 
@@ -92,6 +114,7 @@ GEMINI_API_KEY="your-gemini-api-key"
 PORT=3001
 ```
 
+
 ### 3. Set Up Database
 
 ```bash
@@ -106,6 +129,7 @@ npm run prisma:migrate
 # Or push schema directly (production/Neon)
 npm run prisma:push
 ```
+
 
 ### 4. Start the Application
 
@@ -134,10 +158,14 @@ npm run build
 npm run preview
 ```
 
+
 ### 5. Access the Application
 
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3001/api
+
+
+---
 
 ## API Endpoints
 
@@ -148,10 +176,13 @@ npm run preview
 | `GET` | `/api/workflows/:id` | Get a specific workflow |
 | `DELETE` | `/api/workflows/:id` | Delete a workflow |
 | `GET` | `/api/workflows/steps` | Get available step types |
-| `POST` | `/api/run` | Execute a workflow |
+| `POST` | `/api/runs` | Execute a workflow |
 | `GET` | `/api/runs` | Get run history (default limit: 5) |
 | `GET` | `/api/runs/:id` | Get a specific run |
 | `GET` | `/api/health` | Health check endpoint |
+
+
+---
 
 ## Environment Variables
 
@@ -161,6 +192,9 @@ npm run preview
 | `GEMINI_API_KEY` | Google Gemini API key (free) | Yes |
 | `PORT` | Server port (default: 3001) | No |
 | `NODE_ENV` | Environment (development/production) | No |
+
+
+---
 
 ## What Is Implemented
 
@@ -175,6 +209,9 @@ npm run preview
 - [x] Clean React frontend with routing
 - [x] Responsive UI design
 
+
+---
+
 ## What Is NOT Implemented
 
 - [ ] User authentication
@@ -188,7 +225,11 @@ npm run preview
 - [ ] Webhook notifications
 - [ ] Export/Import workflows
 
-## Deployment Notes
+
+---
+
+## Deployment
+
 
 ### Backend Deployment
 
@@ -200,6 +241,7 @@ Deploy the `server/` directory to any Node.js hosting:
 - AWS/GCP/Azure
 
 Set environment variables in the hosting dashboard.
+
 
 ### Frontend Deployment
 
@@ -218,12 +260,16 @@ Deploy the `dist/` folder to:
 
 **Important:** Update the Vite proxy config or set `VITE_API_URL` to point to your deployed backend.
 
-### Database (Neon PostgreSQL)
+
+### Database (PostgreSQL)
 
 1. Create a Neon project at https://neon.tech
 2. Copy the connection string
 3. Set `DATABASE_URL` in your backend environment
 4. Run `npm run prisma:push` to sync schema
+
+
+---
 
 ## License
 

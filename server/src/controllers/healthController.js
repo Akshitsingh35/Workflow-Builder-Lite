@@ -1,5 +1,5 @@
-const prisma = require('../services/database');
-const llmService = require('../services/llmService');
+import prisma from '../services/database.js';
+import llmService from '../services/llmService.js';
 
 /**
  * Health Controller - System health and status checks
@@ -64,4 +64,4 @@ class HealthController {
     }
 }
 
-module.exports = new HealthController();
+export default new HealthController();
