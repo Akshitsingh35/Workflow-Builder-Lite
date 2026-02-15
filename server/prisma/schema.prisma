@@ -1,0 +1,28 @@
+// Prisma schema for Workflow Builder Lite
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Workflow {
+  id        String   @id @default(uuid())
+  name      String
+  steps     Json     // Array of step objects: [{ type: "summarize" }, { type: "extract_keypoints" }]
+  createdAt DateTime @default(now())
+  runs      Run[]
+}
+
+model Run {
+  id          String   @id @default(uuid())
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  inputText   String
+  stepOutputs Json     // Array of step output objects with execution times
+  createdAt   DateTime @default(now())
+}
